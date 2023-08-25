@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Drink it Now Pare</string>
+    <string-array name="category_options">
+        <item>Category</item>
+        <item>Imported Beer</item>
+        <item>Local Beer</item>
+        <item>Gin</item>
+        <item>Spirits</item>
+
+
+    </string-array>
+
+    <string-array name="category_size">
+        <item>Volume</item>
+        <item>ml</item>
+        <item>Lt</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
