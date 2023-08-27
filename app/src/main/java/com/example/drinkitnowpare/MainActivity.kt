@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
         if (user != null) {
             // User is signed in
             // Perform actions when user is signed in
-            val intent = Intent(this, mngprd::class.java)
+            val intent = Intent(this, dashbord::class.java)
             startActivity(intent)
             finish()
         } else {

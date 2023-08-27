@@ -22,9 +22,15 @@ class CashRegisterActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cash_register)
 
+        val productList = intent.getSerializableExtra("productList") as? ArrayList<Product>
+
         val parentLinearLayout: LinearLayout = findViewById(R.id.linearLayout)
 
         val productManager = ProductManager(this)
+
+        if (productList != null){
+            productManager.setProductList(productList)
+        }
 
         fun showAllProducts() {
             val db = Firebase.firestore
@@ -179,7 +185,7 @@ class CashRegisterActivity : ComponentActivity() {
 
 }
 
-data class Product(val productID: String?, val productName: String?, val price: Double?, val quantity: Int?) :
+data class Product(val productID: String?, val productName: String?, val price: Double?, var quantity: Int?) :
     Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -213,7 +219,7 @@ data class Product(val productID: String?, val productName: String?, val price: 
 }
 
 class ProductManager(private val context: Context) {
-    private val productList = mutableListOf<Product>()
+    private var productList = mutableListOf<Product>()
 
     fun addProduct(product: Product) {
         // Check if the product entry already exists
@@ -229,6 +235,11 @@ class ProductManager(private val context: Context) {
 
     fun getProductList(): MutableList<Product> {
         return productList
+    }
+
+    fun setProductList(array: ArrayList<Product>){
+        productList = array
+        return
     }
 
     private fun showToast(message: String, durationMillis: Int) {
