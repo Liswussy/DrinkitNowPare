@@ -1,17 +1,13 @@
 package com.example.drinkitnowpare
 
-import android.app.AlertDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.content.ContextCompat.startActivity
@@ -42,15 +38,13 @@ class mngprd : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mngprd)
 
-//        val categories = resources.getStringArray(R.array.category_options)
-        val categorySpinner = findViewById<Spinner>(R.id.categorySpinner)
+        val categories = resources.getStringArray(R.array.category_options)
+        val  categorySpinner = findViewById<Spinner>(R.id.categorySpinner)
 
         val cat_size = resources.getStringArray(R.array.category_size)
         val size_opt = findViewById<Spinner>(R.id.sizeoption)
 
-
-        val predefinedCategories = mutableListOf("Local Beer", "Gin", "Liquor", "Spirits", "Custom Category")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, predefinedCategories)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         categorySpinner.adapter = adapter
 
@@ -59,39 +53,7 @@ class mngprd : ComponentActivity() {
         size_opt.adapter = secondadapter
 
 
-        categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val selectedItem = categorySpinner.selectedItem.toString()
-                if (selectedItem == "Custom Category") {
-                    categorySpinner.setSelection(0)
-                    val dialogView = LayoutInflater.from(this@mngprd).inflate(R.layout.custom_dialog_layout_category, null)
-                    val editTextCategory: EditText = dialogView.findViewById(R.id.editTextCategory)
-                    val buttonCategory: Button = dialogView.findViewById(R.id.buttonCategory)
 
-                    val dialog = AlertDialog.Builder(this@mngprd)
-                        .setView(dialogView)
-                        .create()
-
-                    buttonCategory.setOnClickListener {
-                        // Handle confirm button click here
-                        if (editTextCategory.text.toString() != ""){
-                            val newCategory = editTextCategory.text.toString()
-                            predefinedCategories.add(predefinedCategories.size - 1,newCategory)
-                            categorySpinner.setSelection(predefinedCategories.indexOf(newCategory))
-                        }
-                        dialog.dismiss()
-                    }
-
-                    dialog.show()
-
-
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Handle when nothing is selected
-            }
-        }
 
 
 

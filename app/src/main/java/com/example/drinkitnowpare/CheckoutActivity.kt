@@ -1,13 +1,8 @@
 package com.example.drinkitnowpare
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.ktx.firestore
@@ -23,54 +18,13 @@ class CheckoutActivity : ComponentActivity() {
         val productList = intent.getSerializableExtra("productList") as? ArrayList<Product>
         val total = intent.getDoubleExtra("total", 0.0)
 
-        var paymentMethod = "Cash"
-
-        val textViewPaymentMethod: TextView = findViewById(R.id.textViewPaymentMethod)
-
-        val textView9: TextView = findViewById(R.id.textView9)
-        textView9.text = total.toString()
-
-        val imageButton = findViewById<ImageButton>(R.id.imageButton)
-        imageButton.setOnClickListener(){
-            val dialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog_layout_payment, null)
-            val imageButtonGcash: ImageButton = dialogView.findViewById(R.id.imageButtonGcash)
-            val imageButtonCash: ImageButton = dialogView.findViewById(R.id.imageButtonCash)
-            val imageButtonBDO: ImageButton = dialogView.findViewById(R.id.imageButtonBDO)
-
-
-            val dialog = AlertDialog.Builder(this)
-                .setView(dialogView)
-                .create()
-
-            imageButtonGcash.setOnClickListener(){
-                paymentMethod = "GCash"
-                textViewPaymentMethod.text = paymentMethod
-                dialog.dismiss()
-            }
-
-            imageButtonCash.setOnClickListener(){
-                paymentMethod = "Cash"
-                textViewPaymentMethod.text = paymentMethod
-                dialog.dismiss()
-            }
-
-            imageButtonBDO.setOnClickListener(){
-                paymentMethod = "BDO"
-                textViewPaymentMethod.text = paymentMethod
-                dialog.dismiss()
-            }
-
-            dialog.show()
-        }
-
         val buttonConfirm = findViewById<Button>(R.id.button)
         buttonConfirm.setOnClickListener {
 
             val data = hashMapOf(
                 "products" to productList,
                 "total" to total,
-                "timestamp" to com.google.firebase.Timestamp.now(),
-                "paymentMethod" to paymentMethod
+                "timestamp" to com.google.firebase.Timestamp.now()
             )
 
             db.collection("orders")

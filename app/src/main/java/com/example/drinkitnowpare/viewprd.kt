@@ -41,19 +41,18 @@ class viewprd : ComponentActivity() {
             val db = FirebaseFirestore.getInstance()
             val productsCollection = db.collection("products")
 
-            val input = findViewById<EditText>(R.id.sb_prdname).text.toString()
-            val searchCategory = findViewById<Spinner>(R.id.drp_categ).selectedItem.toString()
-
+            val prodname = findViewById<EditText>(R.id.sb_prdname).text.toString()
+            val prodctg = findViewById<Spinner>(R.id.drp_categ).selectedItem.toString()
+            val prosku  = findViewById<EditText>(R.id.sb_sku).text.toString()
             val linearLayout = findViewById<LinearLayout>(R.id.view)
             linearLayout.removeAllViews()
 
-            if (searchCategory == "Category") {
-                productsCollection.whereEqualTo("ctg", input).get()
+            if (prodname != "" && prodctg == "Category" && prosku == ""){ //only prod name
+                productsCollection.whereEqualTo("prdnme", prodname).get()
                     .addOnSuccessListener { querySnapshot ->
                         for (document in querySnapshot) {
                             val dpValue = 40 // Desired height in dp
-                            val density =
-                                resources.displayMetrics.density // Display density in dp per pixel
+                            val density = resources.displayMetrics.density // Display density in dp per pixel
                             val heightInPixels = (dpValue * density).toInt() // Convert dp to pixels
                             val productName = document.getString("prdnme")
                             val category = document.getString("ctg")
@@ -61,8 +60,7 @@ class viewprd : ComponentActivity() {
 
                             val textView = TextView(this)
                             textView.tag = document.id // Set unique ID for each TextView
-                            textView.text =
-                                "$productName | $category | $sku" // Set text for each TextView
+                            textView.text = "$productName | $category | $sku" // Set text for each TextView
                             textView.width = LinearLayout.LayoutParams.MATCH_PARENT // Set width
                             textView.height = heightInPixels // Set height
                             textView.setTextColor(resources.getColor(R.color.white)) // Set text color
@@ -88,13 +86,12 @@ class viewprd : ComponentActivity() {
                             linearLayout.addView(textView) // Add TextView to LinearLayout
                         }
                     }
-            } else if (searchCategory == "SKU") {
-                productsCollection.whereEqualTo("sku", input).get()
+            }else if(prodname == "" && prodctg != "Category" && prosku == ""){ //only prod category
+                productsCollection.whereEqualTo("ctg", prodctg).get()
                     .addOnSuccessListener { querySnapshot ->
                         for (document in querySnapshot) {
                             val dpValue = 40 // Desired height in dp
-                            val density =
-                                resources.displayMetrics.density // Display density in dp per pixel
+                            val density = resources.displayMetrics.density // Display density in dp per pixel
                             val heightInPixels = (dpValue * density).toInt() // Convert dp to pixels
                             val productName = document.getString("prdnme")
                             val category = document.getString("ctg")
@@ -102,8 +99,7 @@ class viewprd : ComponentActivity() {
 
                             val textView = TextView(this)
                             textView.tag = document.id // Set unique ID for each TextView
-                            textView.text =
-                                "$productName | $category | $sku" // Set text for each TextView
+                            textView.text = "$productName | $category | $sku" // Set text for each TextView
                             textView.width = LinearLayout.LayoutParams.MATCH_PARENT // Set width
                             textView.height = heightInPixels // Set height
                             textView.setTextColor(resources.getColor(R.color.white)) // Set text color
@@ -129,13 +125,12 @@ class viewprd : ComponentActivity() {
                             linearLayout.addView(textView) // Add TextView to LinearLayout
                         }
                     }
-            } else if (searchCategory == "Name") {
-                productsCollection.whereEqualTo("prdnme", input).get()
+            }else if(prodname == "" && prodctg == "Category" && prosku != ""){ //only prod SKU
+                productsCollection.whereEqualTo("sku", prosku).get()
                     .addOnSuccessListener { querySnapshot ->
                         for (document in querySnapshot) {
                             val dpValue = 40 // Desired height in dp
-                            val density =
-                                resources.displayMetrics.density // Display density in dp per pixel
+                            val density = resources.displayMetrics.density // Display density in dp per pixel
                             val heightInPixels = (dpValue * density).toInt() // Convert dp to pixels
                             val productName = document.getString("prdnme")
                             val category = document.getString("ctg")
@@ -143,8 +138,7 @@ class viewprd : ComponentActivity() {
 
                             val textView = TextView(this)
                             textView.tag = document.id // Set unique ID for each TextView
-                            textView.text =
-                                "$productName | $category | $sku" // Set text for each TextView
+                            textView.text = "$productName | $category | $sku" // Set text for each TextView
                             textView.width = LinearLayout.LayoutParams.MATCH_PARENT // Set width
                             textView.height = heightInPixels // Set height
                             textView.setTextColor(resources.getColor(R.color.white)) // Set text color
@@ -170,13 +164,12 @@ class viewprd : ComponentActivity() {
                             linearLayout.addView(textView) // Add TextView to LinearLayout
                         }
                     }
-            } else if (searchCategory == "Supplier") {
-                productsCollection.whereEqualTo("supp", input).get()
+            }else if(prodname != "" && prodctg != "Category" && prosku == ""){ //prod name and ctg
+                productsCollection.whereEqualTo("prdnme", prodname).whereEqualTo("ctg", prodctg).get()
                     .addOnSuccessListener { querySnapshot ->
                         for (document in querySnapshot) {
                             val dpValue = 40 // Desired height in dp
-                            val density =
-                                resources.displayMetrics.density // Display density in dp per pixel
+                            val density = resources.displayMetrics.density // Display density in dp per pixel
                             val heightInPixels = (dpValue * density).toInt() // Convert dp to pixels
                             val productName = document.getString("prdnme")
                             val category = document.getString("ctg")
@@ -184,8 +177,124 @@ class viewprd : ComponentActivity() {
 
                             val textView = TextView(this)
                             textView.tag = document.id // Set unique ID for each TextView
-                            textView.text =
-                                "$productName | $category | $sku" // Set text for each TextView
+                            textView.text = "$productName | $category | $sku" // Set text for each TextView
+                            textView.width = LinearLayout.LayoutParams.MATCH_PARENT // Set width
+                            textView.height = heightInPixels // Set height
+                            textView.setTextColor(resources.getColor(R.color.white)) // Set text color
+
+                            // Create a shape drawable for the outline
+                            val shapeDrawable = GradientDrawable()
+                            shapeDrawable.shape = GradientDrawable.RECTANGLE
+                            shapeDrawable.setColor(Color.TRANSPARENT) // Set background color
+                            shapeDrawable.setStroke(2, Color.WHITE) // Set border width and color
+
+                            // Set the shape drawable as the background of the TextView
+                            textView.background = shapeDrawable
+
+                            textView.setOnClickListener {
+
+                                val dataToSend = it.tag.toString()
+
+                                val intent = Intent(this, EditActivity::class.java)
+                                intent.putExtra("prodID", dataToSend)
+                                startActivity(intent)
+                            }
+
+                            linearLayout.addView(textView) // Add TextView to LinearLayout
+                        }
+                    }
+            }else if(prodname != "" && prodctg == "Category" && prosku != ""){ //prod name and SKU
+                productsCollection.whereEqualTo("prdnme", prodname).whereEqualTo("sku", prosku).get()
+                    .addOnSuccessListener { querySnapshot ->
+                        for (document in querySnapshot) {
+                            val dpValue = 40 // Desired height in dp
+                            val density = resources.displayMetrics.density // Display density in dp per pixel
+                            val heightInPixels = (dpValue * density).toInt() // Convert dp to pixels
+                            val productName = document.getString("prdnme")
+                            val category = document.getString("ctg")
+                            val sku = document.getString("sku")
+
+                            val textView = TextView(this)
+                            textView.tag = document.id // Set unique ID for each TextView
+                            textView.text = "$productName | $category | $sku" // Set text for each TextView
+                            textView.width = LinearLayout.LayoutParams.MATCH_PARENT // Set width
+                            textView.height = heightInPixels // Set height
+                            textView.setTextColor(resources.getColor(R.color.white)) // Set text color
+
+                            // Create a shape drawable for the outline
+                            val shapeDrawable = GradientDrawable()
+                            shapeDrawable.shape = GradientDrawable.RECTANGLE
+                            shapeDrawable.setColor(Color.TRANSPARENT) // Set background color
+                            shapeDrawable.setStroke(2, Color.WHITE) // Set border width and color
+
+                            // Set the shape drawable as the background of the TextView
+                            textView.background = shapeDrawable
+
+                            textView.setOnClickListener {
+
+                                val dataToSend = it.tag.toString()
+
+                                val intent = Intent(this, EditActivity::class.java)
+                                intent.putExtra("prodID", dataToSend)
+                                startActivity(intent)
+                            }
+
+                            linearLayout.addView(textView) // Add TextView to LinearLayout
+                        }
+                    }
+            }else if(prodname == "" && prodctg != "Category" && prosku != ""){ //prod ctg and SKU
+                productsCollection.whereEqualTo("ctg", prodctg).whereEqualTo("sku", prosku).get()
+                    .addOnSuccessListener { querySnapshot ->
+                        for (document in querySnapshot) {
+                            val dpValue = 40 // Desired height in dp
+                            val density = resources.displayMetrics.density // Display density in dp per pixel
+                            val heightInPixels = (dpValue * density).toInt() // Convert dp to pixels
+                            val productName = document.getString("prdnme")
+                            val category = document.getString("ctg")
+                            val sku = document.getString("sku")
+
+                            val textView = TextView(this)
+                            textView.tag = document.id // Set unique ID for each TextView
+                            textView.text = "$productName | $category | $sku" // Set text for each TextView
+                            textView.width = LinearLayout.LayoutParams.MATCH_PARENT // Set width
+                            textView.height = heightInPixels // Set height
+                            textView.setTextColor(resources.getColor(R.color.white)) // Set text color
+
+                            // Create a shape drawable for the outline
+                            val shapeDrawable = GradientDrawable()
+                            shapeDrawable.shape = GradientDrawable.RECTANGLE
+                            shapeDrawable.setColor(Color.TRANSPARENT) // Set background color
+                            shapeDrawable.setStroke(2, Color.WHITE) // Set border width and color
+
+                            // Set the shape drawable as the background of the TextView
+                            textView.background = shapeDrawable
+
+                            textView.setOnClickListener {
+
+                                val dataToSend = it.tag.toString()
+
+                                val intent = Intent(this, EditActivity::class.java)
+                                intent.putExtra("prodID", dataToSend)
+                                startActivity(intent)
+                            }
+
+                            linearLayout.addView(textView) // Add TextView to LinearLayout
+                        }
+                    }
+            }else{ //prod name, ctg and SKU
+                productsCollection.whereEqualTo("prdnme", prodname).whereEqualTo("ctg", prodctg).whereEqualTo("sku", prosku).get()
+                    .addOnSuccessListener { querySnapshot ->
+                        for (document in querySnapshot) {
+                            val dpValue = 40 // Desired height in dp
+                            val density = resources.displayMetrics.density // Display density in dp per pixel
+                            val heightInPixels = (dpValue * density).toInt() // Convert dp to pixels
+                            val productName = document.getString("prdnme")
+                            val category = document.getString("ctg")
+                            val sku = document.getString("sku")
+
+                            val textView = TextView(this)
+                            textView.tag = document.id // Set unique ID for each TextView
+                            textView.text = "$productName | $category | $sku" // Set text for each TextView
                             textView.width = LinearLayout.LayoutParams.MATCH_PARENT // Set width
                             textView.height = heightInPixels // Set height
                             textView.setTextColor(resources.getColor(R.color.white)) // Set text color
@@ -213,7 +322,21 @@ class viewprd : ComponentActivity() {
                     }
             }
 
+
+            productsCollection.whereEqualTo(
+                "prdnme",
+                prodname
+            )
+                .whereEqualTo("ctg", prodctg)
+                .whereEqualTo("sku", prosku)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    for (document in querySnapshot) {
+
+                    }
+                }
         }
+
     }
 
     fun showAllProducts() {
